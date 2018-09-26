@@ -1,0 +1,9 @@
+<div id="board" class="container">
+    <div class="columns" *ngFor="let row of board; index as rowId">
+      <app-tile
+        *ngFor="let tile of row; index as tileId"
+        [typeId]="tile"
+      >
+      </app-tile>
+    </div>
+</div>
