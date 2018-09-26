@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+    background-color: rgb(27, 27, 41);
+}
+
+#game-plan {
+    padding: 1% 4%;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+#board {
+    background-color: white;
+    width: 100%;
+    padding: 1rem;
+}
+
+#board .tile {
+    border: 1px solid grey;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0.25rem;
+    font-size: 0.5rem;
+    text-align: center;
+}
+
+#board .wall {
+    background-color: rgb(136, 92, 48);
+}
+
+#board .hero {
+    background-image: url(./assets/hero.png);
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center center;
+}
+
+#board .door {
+    background-image: url(./assets/door.png);
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center center;
+}

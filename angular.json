@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/bulma.css",
               "src/styles.css"
             ],
             "scripts": []
