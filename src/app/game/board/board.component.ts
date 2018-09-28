@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TileComponent } from './tile/tile.component';
+import { BoardMap } from './board.map';
+import { MapConfiguration } from './board.config';
 
 @Component({
   selector: 'app-board',
@@ -10,52 +12,17 @@ export class BoardComponent implements OnInit {
 
   protected board: Array<Array<String>>;
   protected heroPosition: { row: number, column: number };
-  protected readonly directionCalculator = {
-    ArrowUp: (pos) => {
-      return { ...pos, row: pos.row - 1 };
-    },
-    ArrowDown: (pos) => {
-      return { ...pos, row: pos.row + 1 };
-    },
-    ArrowLeft: (pos) => {
-      return { ...pos, column: pos.column - 1 };
-    },
-    ArrowRight: (pos) => {
-      return { ...pos, column: pos.column + 1 };
-    }
-  }
+  
   protected fogDistance = 2;
+  protected map: BoardMap;
   
   constructor() {
-
     this.heroPosition = {
       column: 9,
       row: 7
-    }
+    };
 
-    this.board = [
-      ['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', 'w', '-', '-', '-', '-', '-', 'h', '-', '-', 'w', 'w', '-', 'w', 'w', 'w', '-', 'w'],
-      ['e', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'e'],
-      ['w', '-', '-', 'w', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', 'w', 'w', 'w', 'w', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', 'w', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', '-', '-', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', '-', '-', '-', '-', 'w', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', '-', 'w', '-', '-', 'w'],
-      ['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w']
-
-    ];
+    this.map.setMap(MapConfiguration[0]);
   }
 
   ngOnInit() {
@@ -67,27 +34,10 @@ export class BoardComponent implements OnInit {
         case 'ArrowLeft':
         case 'ArrowRight':
           ev.preventDefault();
-          this.moveHero(ev.key);
+          this.map.moveHero(ev.key);
         break;
       }
     });
-  }
-
-  protected moveHero(dir) {
-    if (!this.directionCalculator.hasOwnProperty(dir)) {
-      return false;
-    }
-  
-    const nextPos = this.directionCalculator[dir](this.heroPosition);
-  
-    if (this.isPositionFree(nextPos)) {
-      this.board[this.heroPosition.row][this.heroPosition.column] = this.ttypes.SPACE;
-      this.board[nextPos.row][nextPos.column] = this.ttypes.HERO;
-      this.heroPosition = nextPos;
-      return true;
-    }
-
-    return false;
   }
 
   protected getValueFromPosition(pos) {
@@ -104,7 +54,7 @@ export class BoardComponent implements OnInit {
     return false;
   }
 
-  protected isPositionFree(pos) {
+  protected isPositionSpace(pos) {
     if (this.getValueFromPosition(pos) === this.ttypes.SPACE) {
       return true;
     }
