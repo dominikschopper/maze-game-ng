@@ -1,0 +1,36 @@
+#board .tile {
+    border: 1px solid grey;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0.25rem;
+    font-size: 0.5rem;
+    text-align: center;
+    position: relative;
+}
+
+#board .wall {
+    background-color: rgb(78, 48, 36);
+}
+
+#board .hero {
+    background-image: url("../../../../assets/hero.png");
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center center;
+}
+
+#board .door {
+    background-image: url("../../../../assets/door.png");
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center center;
+}
+
+#board .fog {
+    background-color: rgba(0, 0, 0, 0.85);    
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}

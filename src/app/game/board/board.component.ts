@@ -24,7 +24,8 @@ export class BoardComponent implements OnInit {
       return { ...pos, column: pos.column + 1 };
     }
   }
-
+  protected fogDistance = 2;
+  
   constructor() {
 
     this.heroPosition = {
@@ -72,31 +73,49 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  moveHero(dir) {
+  protected moveHero(dir) {
     if (!this.directionCalculator.hasOwnProperty(dir)) {
       return false;
     }
+  
     const nextPos = this.directionCalculator[dir](this.heroPosition);
-    console.log('pos should change to', nextPos);
+  
     if (this.isPositionFree(nextPos)) {
-      console.log('in next')
-      this.board[this.heroPosition.row][this.heroPosition.column] = '-';
-      this.board[nextPos.row][nextPos.column] = 'h';
+      this.board[this.heroPosition.row][this.heroPosition.column] = this.ttypes.SPACE;
+      this.board[nextPos.row][nextPos.column] = this.ttypes.HERO;
       this.heroPosition = nextPos;
       return true;
     }
+
     return false;
   }
 
-  getValueFromPosition(pos) {
+  protected getValueFromPosition(pos) {
     return this.board[pos.row][pos.column];
   }
 
-  isPositionFree(pos) {
-    if (this.getValueFromPosition(pos) === '-') {
+  protected shouldElementBeFoggy(pos) {
+    if (pos.row < this.heroPosition.row -  + this.fogDistance || pos.row > this.heroPosition.row + this.fogDistance) {
+      return true;
+    }
+    if (pos.column < this.heroPosition.column -  + this.fogDistance || pos.column > this.heroPosition.column + this.fogDistance) {
       return true;
     }
     return false;
   }
+
+  protected isPositionFree(pos) {
+    if (this.getValueFromPosition(pos) === this.ttypes.SPACE) {
+      return true;
+    }
+    return false;
+  }
+
+  protected isPositionWall(pos) {
+    if (this.getValueFromPosition(pos) === this.ttypes.WALL) {
+      return true;
+    }
+    return false;
+  } 
 
 }

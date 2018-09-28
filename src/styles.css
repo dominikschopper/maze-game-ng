@@ -15,7 +15,7 @@ html, body {
     padding: 1rem;
 }
 
-#board .tile {
+/* #board .tile {
     border: 1px solid grey;
     height: 2rem;
     width: 2rem;
@@ -40,4 +40,4 @@ html, body {
     background-repeat: no-repeat;
     background-size: 90%;
     background-position: center center;
-}
+} */

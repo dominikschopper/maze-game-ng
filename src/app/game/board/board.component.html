@@ -1,8 +1,9 @@
 <div id="board" class="container">
     <div class="columns" *ngFor="let row of board; index as rowId">
       <app-tile
-        *ngFor="let tile of row; index as tileId"
+        *ngFor="let tile of row; index as columnId"
         [typeId]="tile"
+        [foggy]="shouldElementBeFoggy({row: rowId, column: columnId})"
       >
       </app-tile>
     </div>

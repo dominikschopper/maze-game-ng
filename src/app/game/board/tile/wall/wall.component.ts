@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-wall',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./wall.component.css']
 })
 export class WallComponent implements OnInit {
+
+  @Input() protected foggy: Boolean = false;
 
   constructor() { }
 

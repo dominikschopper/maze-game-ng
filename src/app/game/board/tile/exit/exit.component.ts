@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-exit',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./exit.component.css']
 })
 export class ExitComponent implements OnInit {
+  
+  @Input() protected foggy:Boolean = false;
 
   constructor() { }
 
