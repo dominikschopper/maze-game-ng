@@ -1,10 +1,11 @@
+import { BoardFogCalculator } from "./board.fogcalculator";
 const HERO_SYMBOL = 'h';
 const WALL_SYMBOL = 'w';
 const EXIT_SYMBOL = 'e';
 const MONSTER_SYMBOL = 'm';
 const VILLAIN_SYMBOL = 'v';
-const SPACE_SYMBOL = 's';
-export class BoardMap {
+const SPACE_SYMBOL = '-';
+export default class BoardMap {
     /**
      * [ 
      *  [ 'w', 'w', 'w', 'w', 'w', 'w', 'w' ]
@@ -13,52 +14,56 @@ export class BoardMap {
      *  [ 'w', 'w', 'w', 'w', 'w', 'w', 'w' ]
      * ]
      */
-    protected map: Array<Array<string>>;
+    public map: Array<Array<string>>;
 
     protected readonly directionCalculator = {
-        ArrowUp: (pos) => {
+        up: (pos) => {
             return { ...pos, row: pos.row - 1 };
         },
-        ArrowDown: (pos) => {
+        down: (pos) => {
             return { ...pos, row: pos.row + 1 };
         },
-        ArrowLeft: (pos) => {
+        left: (pos) => {
             return { ...pos, column: pos.column - 1 };
         },
-        ArrowRight: (pos) => {
+        right: (pos) => {
             return { ...pos, column: pos.column + 1 };
         }
     }
 
-    protected positions: Map<String, { row: Number, column: Number }>;
+    protected fogCalculator: BoardFogCalculator = new BoardFogCalculator(2, this);
+
+    protected positions: Map<string, { row: number, column: number }> = new Map();
 
     public setMap(map) {
         this.map = map;
         this.walkTheBoard(this.findHeroPositionCb);
+        const heroPos = this.getCharacterPositionOf(HERO_SYMBOL);
+        this.setCharacterPosition(HERO_SYMBOL, heroPos);
+        this.fogCalculator.setHeroPosition(heroPos);
         return this;
     }
 
-    protected findHeroPositionCb(value, pos) {
+    public getMap() {
+        return [...this.map];
+    }
+
+    protected findHeroPositionCb = (value, pos) => {
         if (value === HERO_SYMBOL) {
             this.positions.set(HERO_SYMBOL, pos);
         }
     }
 
-    /**
-     * 
-     * @param symb {Enum<string>}
-     * @param pos {{column: number, row: number}}
-     */
-    protected setCharacterPosition(symb, pos) {
-        this.positions[symb] = pos;
+    protected setCharacterPosition(symb: string, pos: {column: number, row: number}) {
+        this.positions.set(symb, pos)
         this.map[pos.row][pos.column] = symb;
     }
 
-    public getCharacterPositionOf(who: String) {
+    public getCharacterPositionOf(who: string) {
         return this.positions.get(who);
     }
 
-    public isPositionThis(pos, symb) {
+    public isPositionThis(pos: {column: number, row: number}, symb: string) {
         return this.map[pos.row][pos.column] === symb;
     }
     public isPositionWall(pos) {
@@ -72,17 +77,24 @@ export class BoardMap {
         if (!this.directionCalculator.hasOwnProperty(dir)) {
             return false;
         }
-
-        const nextPos = this.directionCalculator[dir](this.getCharacterPositionOf(HERO_SYMBOL));
-
+        const oldPos = this.getCharacterPositionOf(HERO_SYMBOL);
+        const nextPos = this.directionCalculator[dir](oldPos);
+        console.log('direction:%o oldPos:%o -> nextPos:%o', dir, oldPos, nextPos);
+        
         if (this.isPositionSpace(nextPos)) {
-            this.map[this.positions[HERO_SYMBOL].row][this.positions[HERO_SYMBOL].column] = SPACE_SYMBOL;
+            this.map[oldPos.row][oldPos.column] = SPACE_SYMBOL;
             this.map[nextPos.row][nextPos.column] = HERO_SYMBOL;
             this.setCharacterPosition(HERO_SYMBOL, nextPos);
+            this.fogCalculator.setHeroPosition(nextPos);
             return true;
         }
 
         return false;
+    }
+
+    public shouldElementBeClear(pos: {column: number, row: number}) {
+        // debugger;
+        return this.fogCalculator.isPosClear(pos);
     }
 
     /**
@@ -92,9 +104,9 @@ export class BoardMap {
     walkTheBoard(...callbacks) {
         for (let r = 0; r < this.map.length; r += 1) {
             for (let c = 0; c < this.map.length; c += 1) {
-                callbacks.forEach((cb) => {
-                    cb(this.map[r][c], { row: r, column: c });
-                });
+                for (let i = 0; i < callbacks.length; i += 1) {
+                    callbacks[i](this.map[r][c], { row: r, column: c });
+                }
             }
         }
     }

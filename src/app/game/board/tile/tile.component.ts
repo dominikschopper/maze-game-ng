@@ -10,7 +10,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 export class TileComponent implements OnInit {
 
   @Input() protected typeId: String;
-  @Input() protected foggy: Boolean;
+  @Input() protected clear: Boolean;
 
   constructor() {
 

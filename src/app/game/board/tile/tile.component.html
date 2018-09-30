@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="typeId">
-  <app-wall *ngSwitchCase="'w'" [foggy]="foggy"></app-wall>
-  <app-hero *ngSwitchCase="'h'" [foggy]="foggy"></app-hero>
-  <app-exit *ngSwitchCase="'e'" [foggy]="foggy"></app-exit>
-  <app-space *ngSwitchDefault [foggy]="foggy"></app-space>
+  <app-wall *ngSwitchCase="'w'" [foggy]="!clear"></app-wall>
+  <app-hero *ngSwitchCase="'h'" [foggy]="!clear"></app-hero>
+  <app-exit *ngSwitchCase="'e'" [foggy]="!clear"></app-exit>
+  <app-space *ngSwitchDefault [foggy]="!clear"></app-space>
 </ng-container>
